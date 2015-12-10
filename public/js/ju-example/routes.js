@@ -20,11 +20,15 @@ define( [
     'use strict';
 
     var routesDef = {
-
         'nihao' : {
             route: 'nihao',
             defaultRoute : 'nihao',
-            controller: 'ju-example/controller-with-component'
+            controller : 'ju-example/modules/landing/landing'
+        },
+
+        'nihao-component' : {
+            route: 'nihao-component',
+            controller: 'ju-example/modules/nihao-components/controller-with-component'
         }
     };
 

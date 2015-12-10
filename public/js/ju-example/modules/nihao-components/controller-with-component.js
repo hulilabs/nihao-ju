@@ -19,7 +19,7 @@
  */
 define([
             'ju-mvc/controller',
-            'ju-example/nihao-component'
+            'ju-example/modules/nihao-components/nihao-component'
         ],
         function (
             Controller,

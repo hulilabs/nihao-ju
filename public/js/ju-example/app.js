@@ -14,7 +14,7 @@ require([
             'ju-shared/logger',
             'ju-mvc/history',
             'ju-mvc/page-manager',
-            'routes'
+            'ju-example/routes'
         ],
         function(
                     $,
