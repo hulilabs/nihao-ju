@@ -29,6 +29,12 @@ define( [
         'nihao-component' : {
             route: 'nihao-component',
             controller: 'ju-example/modules/nihao-components/controller-with-component'
+        },
+
+        'progress-bar' : {
+            route : 'progress-bar',
+            defaultRoute : 'progress-bar',
+            controller : 'js/ju-example/modules/progress-bar/progress-bar-ctrl'
         }
     };
 

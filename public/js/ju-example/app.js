@@ -36,7 +36,7 @@ require([
         if (!matchedUrl) {
             log('No tab loaded by default, we will load the first available...');
 
-            PageManager.navigateToRoute('nihao');
+            PageManager.navigateToRoute('progress-bar');
         }
     };
 
