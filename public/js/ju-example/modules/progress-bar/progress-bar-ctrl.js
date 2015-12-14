@@ -40,13 +40,15 @@ define([
         init : function(){
             this._super.apply(this);
             this.observer = new Graphics(this,ProgressBarCtrl);
+            this.observer.listenEvents();
             this.S = {
-                init : '.init-complete',
+                /*init : '.init-complete',
                 handleRoutes : '.handle-complete',
                 load : '.load-complete',
                 setup : '.setup-complete',
                 find : '.find-complete',
-                bind : '.bind-complete'
+                bind : '.bind-complete'*/
+                dummyButton : '.dummy-button',
             }
         },
 
@@ -54,38 +56,41 @@ define([
         handleRoute : function(alreadyInStack, routerParams, urlParams) {
             this._super(alreadyInStack, routerParams, urlParams);
             this.load.apply(this, urlParams);
-            this.trigger(this._class.EV.HANDLE,this.t.$handleComplete);
         },
 
         load : function () {
             var $content = $(progressBarView);
             this.setContent($content);
+            this.trigger(ProgressBarCtrl.EV.INIT);
+            this.trigger(ProgressBarCtrl.EV.HANDLE);
+            this.trigger(ProgressBarCtrl.EV.LOAD);
             this.setup();
         },
 
         setup : function(){
-            this.observer.listenEvents();
+            this.trigger(ProgressBarCtrl.EV.SETUP);
             this.findLocalElems();
-            this.bindEvents();
         },
 
         findLocalElems : function(){
             this.t = {
-                $initComplete: $(this.S.init),
+                /*$initComplete: $(this.S.init),
                 $handleComplete: $(this.S.handleRoutes),
                 $loadComplete: $(this.S.load),
                 $setupComplete: $(this.S.setup),
                 $findComplete: $(this.S.find),
-                $bindComplete: $(this.S.bind)
+                $bindComplete: $(this.S.bind)*/
+                $dummyButton : this.$container.find(this.S.dummyButton),
             }
-            this.trigger(this._class.EV.INIT,this.t.$initComplete);
-            this.trigger(this._class.EV.LOAD,this.t.$loadComplete);
-            this.trigger(this._class.EV.FIND,this.t.$findComplete);
+            this.trigger(ProgressBarCtrl.EV.FIND);
+            this.bindEvents();
         },
 
         bindEvents : function(){
-            this.trigger(this._class.EV.BIND,this.t.$bindComplete);
-            this.trigger(this._class.EV.SETUP,this.t.$setupComplete);
+            this.t.$dummyButton.on('click',function(){
+                log("Dummy Button Clicked");
+            });
+            this.trigger(ProgressBarCtrl.EV.BIND);
         },
 
         destroy : function(){
