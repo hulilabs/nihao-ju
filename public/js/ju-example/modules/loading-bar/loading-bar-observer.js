@@ -10,64 +10,116 @@
  */
 
 /**
- * Example self contained component with no resource dependencies
- * that displays a "Nihao!" in the view
  *
- * WARNING : proof of concept only, not a "good practices" guideline
- *           however, explanatory comments are reliable :p
  */
 define( [
-            'ju-shared/class'
+            'ju-shared/class',
+            'view/loading-bar/init',
+            'view/loading-bar/handle',
+            'view/loading-bar/load',
+            'view/loading-bar/setup',
+            'view/loading-bar/find',
+            'view/loading-bar/bind',
+            'view/loading-bar/message',
         ],
         function (
-            Class
+            Class,
+            initView,
+            handleView,
+            loadView,
+            setupView,
+            findView,
+            bindView,
+            dummyMessage
         ) {
 
     'use strict';
     
     var LoadingBarActions = Class.extend({
 
-        init : function(controller, ControllerDefinition) {
+        init : function(controller, ControllerDefinition, $container) {            
             this.controller = controller;
             this.ControllerDefinition = ControllerDefinition;
+            this.S = {
+                $buttonNext: '.button-next'
+            };
+            this.STAGES_LISTENERS = {
+                INIT : this.initComplete,
+                HANDLE: this.handleComplete,
+                LOAD: this.loadComplete,
+                SETUP: this.setupComplete,
+                FIND: this.findComplete,
+                BIND: this.bindComplete,
+                DISPLAY_MESSAGE: this.displayMessage
+            };
         },
 
-        listen : function() {            
-            this.controller.on(this.ControllerDefinition.EV.INIT, this.initComplete);        
-            this.controller.on(this.ControllerDefinition.EV.HANDLE, this.handleComplete);
-            this.controller.on(this.ControllerDefinition.EV.LOAD, this.loadComplete);
-            this.controller.on(this.ControllerDefinition.EV.SETUP, this.setupComplete);
-            this.controller.on(this.ControllerDefinition.EV.FIND, this.findComplete);
-            this.controller.on(this.ControllerDefinition.EV.BIND, this.bindComplete);
+        setup : function($container) {
+            this.$container = $container;            
+            this.findLocalElems();
+            this.bindEvents();
+        },      
+
+        findLocalElems : function() {
+            this.t = {
+                $buttonNext : this.$container.find(this.S.$buttonNext)
+            };            
         },
 
-        initComplete : function($view) {            
-            $view.html('init');
+        bindEvents : function() {
+            var nextStageHandler = this.goToNextStage.bind(this);
+            this.t.$buttonNext.on('click', nextStageHandler);
         },
 
-        handleComplete : function($view) {
-            $view.html('handle');
+        goToNextStage : function() { 
+            if (this.nextStage) {                
+                this.nextStage();
+            }
         },
 
-        loadComplete : function($view) {
-            $view.html('load');
+        listen : function() {
+            // bind handlers with *this* for access to observer's variables            
+            for (var event in this.ControllerDefinition.EV) {
+                this.controller.on(this.ControllerDefinition.EV[event], this.STAGES_LISTENERS[event].bind(this));
+            }
         },
 
-        setupComplete : function($view) {
-            $view.html('setup');
+        initComplete : function(nextStage) {
+            this.nextStage = nextStage;
+            this.$container.append($(initView));
         },
 
-        findComplete : function($view) {
-            $view.html('find');
+        handleComplete : function(nextStage) {     
+            this.nextStage = nextStage;
+            this.$container.append($(handleView));
         },
 
-        bindComplete : function($view) {
-            $view.html('bind');
+        loadComplete : function(nextStage) {
+            this.nextStage = nextStage;
+            this.$container.append($(loadView));
+        },
+
+        setupComplete : function(nextStage) {  
+            this.nextStage = nextStage;
+            this.$container.append($(setupView));
+        },
+
+        findComplete : function(nextStage) {
+            this.nextStage = nextStage;
+            this.$container.append($(findView));
+        },
+
+        bindComplete : function(nextStage) {
+            this.nextStage = nextStage;
+            this.$container.append($(bindView));
+            this.t.$buttonNext.prop( 'disabled', true );
+        },
+
+        displayMessage : function () {
+            this.$container.append($(dummyMessage));
         }
-    });
 
-    
-    
+    });
 
     return LoadingBarActions;
     
