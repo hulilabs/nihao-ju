@@ -29,6 +29,11 @@ define( [
         'nihao-component' : {
             route: 'nihao-component',
             controller: 'ju-example/modules/nihao-components/controller-with-component'
+        },
+
+        'loading-bar' : {
+            route: 'loading-bar',
+            controller: 'ju-example/modules/loading-bar/loading-bar'
         }
     };
 
