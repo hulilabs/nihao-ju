@@ -18,13 +18,13 @@
  */
 define([
             'ju-mvc/controller',
-            'view/graphics',
+            'view/progress-bar-observer',
             'view/progress-bar-view',
             'ju-shared/observable-class'
         ],
         function (
             Controller,
-            Graphics,
+            ProgressBarObserver,
             progressBarView,
             ObservableClass
         ) {
@@ -39,15 +39,9 @@ define([
 
         init : function(){
             this._super.apply(this);
-            this.observer = new Graphics(this,ProgressBarCtrl);
+            this.observer = new ProgressBarObserver(this,ProgressBarCtrl);
             this.observer.listenEvents();
             this.S = {
-                /*init : '.init-complete',
-                handleRoutes : '.handle-complete',
-                load : '.load-complete',
-                setup : '.setup-complete',
-                find : '.find-complete',
-                bind : '.bind-complete'*/
                 dummyButton : '.dummy-button',
             }
         },
@@ -61,6 +55,7 @@ define([
         load : function () {
             var $content = $(progressBarView);
             this.setContent($content);
+            this.observer.setup(this.$container);
             this.trigger(ProgressBarCtrl.EV.INIT);
             this.trigger(ProgressBarCtrl.EV.HANDLE);
             this.trigger(ProgressBarCtrl.EV.LOAD);
@@ -69,18 +64,12 @@ define([
 
         setup : function(){
             this.trigger(ProgressBarCtrl.EV.SETUP);
-            this.findLocalElems();
+            this.findLocalElements();
         },
 
-        findLocalElems : function(){
+        findLocalElements : function(){
             this.t = {
-                /*$initComplete: $(this.S.init),
-                $handleComplete: $(this.S.handleRoutes),
-                $loadComplete: $(this.S.load),
-                $setupComplete: $(this.S.setup),
-                $findComplete: $(this.S.find),
-                $bindComplete: $(this.S.bind)*/
-                $dummyButton : this.$container.find(this.S.dummyButton),
+                $dummyButton : this.$container.find(this.S.dummyButton)
             }
             this.trigger(ProgressBarCtrl.EV.FIND);
             this.bindEvents();
@@ -88,7 +77,7 @@ define([
 
         bindEvents : function(){
             this.t.$dummyButton.on('click',function(){
-                log("Dummy Button Clicked");
+                log('Dummy Button Clicked');
             });
             this.trigger(ProgressBarCtrl.EV.BIND);
         },
@@ -99,14 +88,16 @@ define([
 
     });
 
+    /*Constant events stored in class*/
     ProgressBarCtrl.classMembers({
         EV : {
-            INIT: "init",
-            HANDLE: "handleRoutes",
-            LOAD: "load",
-            SETUP: "setup",
-            FIND: "find",
-            BIND: "bind"
+            INIT: 'init',
+            HANDLE: 'handleRoutes',
+            LOAD: 'load',
+            SETUP: 'setup',
+            FIND: 'find',
+            BIND: 'bind',
+            END_MESSAGE : 'end_life_cycle'
         }
     });
 
