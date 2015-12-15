@@ -52,38 +52,43 @@ define([
             this.load.apply(this, urlParams);
         },
 
-        load : function () {
+        load : function (){
             var $content = $(progressBarView);
             this.setContent($content);
             this.observer.setup(this.$container);
             this.trigger(ProgressBarCtrl.EV.INIT);
             this.trigger(ProgressBarCtrl.EV.HANDLE);
-            this.trigger(ProgressBarCtrl.EV.LOAD);
-            this.setup();
+            this.trigger(ProgressBarCtrl.EV.LOAD,this.setup.bind(this));
         },
 
-        setup : function(){
-            this.trigger(ProgressBarCtrl.EV.SETUP);
-            this.findLocalElements();
+        setup : function() {
+            this.trigger(ProgressBarCtrl.EV.SETUP,this.findLocalElements.bind(this));
         },
 
         findLocalElements : function(){
             this.t = {
                 $dummyButton : this.$container.find(this.S.dummyButton)
             }
-            this.trigger(ProgressBarCtrl.EV.FIND);
-            this.bindEvents();
+            this.trigger(ProgressBarCtrl.EV.FIND,this.bindEvents.bind(this));
         },
 
         bindEvents : function(){
             this.t.$dummyButton.on('click',function(){
                 log('Dummy Button Clicked');
             });
-            this.trigger(ProgressBarCtrl.EV.BIND);
+            this.trigger(ProgressBarCtrl.EV.BIND,this.displayEndMessage.bind(this));
         },
 
         destroy : function(){
 
+        },
+
+        appendToPage : function(mkp) {
+            this.$container.append(mkp);
+        },
+
+        displayEndMessage : function(){
+            this.trigger(ProgressBarCtrl.EV.END_MESSAGE);
         }
 
     });
@@ -91,13 +96,13 @@ define([
     /*Constant events stored in class*/
     ProgressBarCtrl.classMembers({
         EV : {
-            INIT: 'init',
-            HANDLE: 'handleRoutes',
-            LOAD: 'load',
-            SETUP: 'setup',
-            FIND: 'find',
-            BIND: 'bind',
-            END_MESSAGE : 'end_life_cycle'
+            INIT: 'INIT_PHASE',
+            HANDLE: 'HANDLE_PHASE',
+            LOAD: 'LOAD_PHASE',
+            SETUP: 'SETUP_PHASE',
+            FIND: 'FIND_PHASE',
+            BIND: 'BIND_PHASE',
+            END_MESSAGE : 'END_PHASE'
         }
     });
 

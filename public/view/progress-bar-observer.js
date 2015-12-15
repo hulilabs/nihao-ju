@@ -64,49 +64,56 @@ define([
         },
 
         bindEvents : function(){
-            this.t.$nextButton.on('click',function(){
-                log('Next Phase Button Clicked');
-            });
+            var phasesHandler = this.nextPhase.bind(this);
+            this.t.$nextButton.on('click', phasesHandler);
         },
 
         listenEvents: function(){
-            for(var event in this.PHASES){
-                this.controller.on(this.classDefinition.EV[event],this.PHASES[event]);
+            for (var eventKey in this.classDefinition.EV) {
+                var eventValue = this.classDefinition.EV[eventKey];
+                this.controller.on(eventValue,this.PHASES[eventValue].bind(this));
             }
         },
 
-        initComplete: function($view){
-            //$view.html("init complete");
-            //this.ctrl.appendPage("<h4>init</h4>");
+        nextPhase : function(){
+            if(this.nextPhase){
+                this.nextPhase();
+            }
         },
 
-        handleComplete: function($view){
-            //$view.html("handle complete");
-            //this.ctrl.appendPage("<h4>handle</h4>");
+        initComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>init</h4>');
         },
 
-        loadComplete: function($view){
-            //$view.html("load complete");
-            //this.ctrl.appendPage("<h4>load</h4>");
+        handleComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>handle</h4>');
         },
 
-        setupComplete: function($view){
-            //$view.html("setup complete");
-            //this.ctrl.appendPage("<h4>setup</h4>");
+        loadComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>load</h4>');
         },
 
-        findComplete: function($view){
-            //$view.html("find complete");
-            //this.ctrl.appendPage("<h4>find</h4>");
+        setupComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>setup</h4>');
         },
 
-        bindComplete: function($view){
-            //$view.html("bind complete");
-            //this.ctrl.appendPage("<h4>bind</h4>");
+        findComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>find</h4>');
         },
 
-        displayEndMessage : function($view){
+        bindComplete: function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>bind</h4>');
+        },
 
+        displayEndMessage : function(phase){
+            this.nextPhase = phase;
+            this.controller.appendToPage('<h4>end</h4>');
         }
     });
 
