@@ -51,24 +51,6 @@ define( [
                 // component-dependent options
             }
         */
-
-        box_component1 : {
-            component : 'ju-example/modules/color-numbers/box-component',
-            insertionPoint : '.box1',
-            opts : {
-                num : '1',
-                color : 'red'
-            }
-        },
-
-        box_component2 : {
-            component : 'ju-example/modules/color-numbers/box-component',
-            insertionPoint : '.box2',
-            opts : {
-                num : '2',
-                color : 'blue'
-            }
-        }
     };
 
     var ColorNumbersComponent = BaseComponent.extend({
@@ -88,7 +70,61 @@ define( [
 
             this.addResources(RESOURCE_MAP);
 
+            this.S = {
+                turnOnButton : '.turn-on-button',
+                boxNumberInput : '.box-number-input',
+            }
+
+            this._generateBoxes(9);
+
             this.childrenDef = CHILDREN_DEFINITION;
+        },
+
+        //initChildrenDef
+
+        bindEvents : function () {
+            this.t.$turnOnButton.on('click', this._changeButtonText.bind(this));
+        },
+
+        _changeButtonText : function () {
+            log('ON Button Clicked');
+        },
+
+        _generateBoxes : function (numberOfBoxes) {
+            var usedColorKeys = [];
+            var boxKey, randomColor;
+            for (var i = 1; i <= numberOfBoxes; i++) {
+                boxKey = 'box'+i;
+                randomColor = this._getRandomValidColor(usedColorKeys);
+                usedColorKeys.push(randomColor);
+                CHILDREN_DEFINITION[boxKey] = {
+                    component : 'ju-example/modules/color-numbers/box-component',
+                    insertionPoint : '.'+boxKey,
+                    opts : {
+                        num : i,
+                        color : randomColor
+                    }
+                }
+            };
+        },
+
+        _getRandomColor : function (colorKeys) {
+            var randomColor = colorKeys[Math.floor(Math.random()*colorKeys.length)];
+            return randomColor;
+        },
+
+        _getRandomValidColor : function (usedColorKeys){
+            var colorKeys = Object.keys(ColorNumbersComponent.BOX_COLORS);
+            var randomColor = this._getRandomColor(colorKeys);
+            if (usedColorKeys.indexOf(randomColor) == -1) {
+                usedColorKeys.push(randomColor);
+            } else {
+                while (usedColorKeys.indexOf(randomColor) != -1) {
+                    randomColor = this._getRandomColor(colorKeys);
+                }
+            }
+
+            return randomColor;
         },
 
         /**
@@ -104,6 +140,17 @@ define( [
     ColorNumbersComponent.classMembers({
         // add 'static' class members here
         // i.e. can be accessed from the class definition without an instance
+        BOX_COLORS : {
+            red : 'red',
+            green : 'green',
+            blue : 'blue',
+            yellow : 'yellow',
+            white : 'white',
+            coral : 'coral',
+            darkblue : 'darkblue',
+            darkred : 'darkred',
+            darkslategray : 'darkslategray'
+        }
     });
 
     return ColorNumbersComponent;

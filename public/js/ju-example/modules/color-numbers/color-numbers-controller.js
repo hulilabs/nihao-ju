@@ -36,12 +36,12 @@ define([
      */
     var ControllerWithComponent = Controller.extend({
 
-        /*
+        
         init : function() {
             this._super.apply(this);
-            this.landCompClass = NihaoComponent;
+            this.colorNumbersCompClass = ColorNumbersComponent;
         },
-        */
+        
 
         /**
          * Must be implemented in child classes
@@ -65,7 +65,8 @@ define([
             this.colorNumbersCompInst.isRootComponent = true;
 
             this.colorNumbersCompInst.load.apply(this.colorNumbersCompInst, $.merge([$content], arguments));
-        }
+
+        },
 
     });
 
