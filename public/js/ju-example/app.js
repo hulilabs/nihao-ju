@@ -36,7 +36,7 @@ require([
         if (!matchedUrl) {
             log('No tab loaded by default, we will load the first available...');
 
-            PageManager.navigateToRoute('progress-bar');
+            PageManager.navigateToRoute('color-numbers');
         }
     };
 
