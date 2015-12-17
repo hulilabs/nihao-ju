@@ -22,8 +22,7 @@
     "branch": "master",
     "commit": "d76a75699389409b7a8a146c3502e801a57d8a22"
   },
-  "_source": "https://github.com/hulilabs/ju-shared.git",
+  "_source": "git://github.com/hulilabs/ju-shared.git",
   "_target": "*",
-  "_originalSource": "https://github.com/hulilabs/ju-shared.git",
-  "_direct": true
+  "_originalSource": "hulilabs/ju-shared"
 }

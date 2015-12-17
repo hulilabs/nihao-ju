@@ -38,6 +38,9 @@ define( [
                 childListeners : [],
                 // Skip when get data is undefined
                 skipFieldOnUndefined : false,
+                // Callback for verifying data emptiness
+                // Implemented due to lists promises behavior on addChild
+                checkDataEmptiness : null,
                 // should trigger an event when the async `setData` operation ends?
                 // see `addChild` and `setData` for more details
                 triggerOnSetDataEnd : false,
@@ -61,6 +64,10 @@ define( [
 
             // Auto incrementing counter to assign ids to the list components
             this.nextComponentId = 1;
+
+            // during child add flow, this can be set to true
+            // by calling `preventChildAdd`
+            this._preventChildAdd = false;
 
             // If the always editable flag is on then a default item should be added
             this.hasDefaultItem = true;
@@ -99,15 +106,41 @@ define( [
                 this.fireEventAndNotify(ListComponent.EV.MAX_CHILDREN_REACHED);
             }
         },
+
         /**
-         * Checks if the child can be added (validation)
-         * - At list level, only the max children count is checked
-         * - Custom implementations can be done on sub clases (like checking data)
-         * @abstract
+         * Triggers a `BEFORE_ADD_CHILD` event and if one of the listeners calls
+         * `preventDefault`, the list will stop the current `addChild` operation
+         * @param  {Object} data to be added
+         * @return {Boolean}
          */
-        canAddChild : function () {
+        canAddChild : function (data) {
+
+            var addChildEvent = {
+                target : this,
+                data : data,
+                preventDefault : $.proxy(this.preventChildAdd, this)
+            };
+
+            this.trigger(ListComponent.EV.BEFORE_ADD_CHILD, addChildEvent);
+
+            if (this._preventChildAdd) {
+
+                // resets flag to make sure that future `addChild`
+                // can continue normally
+                this._preventChildAdd = false;
+                return false;
+            }
+            // NOTICE: this is a fallback to previous canAddChild implementation
+            // TODO: this `isMaxChildrenReached` should be moved to a behavior binder
             return !this.isMaxChildrenReached();
         },
+
+        // exposed setter to be used as `preventDefault`
+        // to stop a `child add` operation
+        preventChildAdd : function() {
+            this._preventChildAdd = true;
+        },
+
         notifyChildNotAdded : function () {
             this.fireEventAndNotify(ListComponent.EV.CHILD_NOT_ADDED, arguments);
         },
@@ -115,8 +148,7 @@ define( [
          * Method to add a new child component instance into the list
          */
         addChild : function (data, enableChildEditMode) {
-            // debugger;
-            if (this.canAddChild.apply(this, arguments)) {
+            if (this.canAddChild(data)) {
                 if (!this.opts.triggerOnSetDataEnd) {
                     return this.addChildAsPromised.apply(this, arguments);
                 } else {
@@ -622,8 +654,11 @@ define( [
             this.clear();
 
             if ($.isArray(data)) {
-                results.isEmpty = (data.length === 0);
-                var canSetData = results.success = !results.isEmpty;
+                var checkDataEmptinessFn = this.opts.checkDataEmptiness,
+                    canSetData = results.success = (data.length !== 0);
+
+                results.isEmpty = checkDataEmptinessFn ? checkDataEmptinessFn(data) : this.isEmptyData(data);
+
                 if (canSetData) {
                     // Default item
                     if (this.opts.alwaysEditable && this.defaultItemId) {
@@ -650,6 +685,14 @@ define( [
             // Standard set data result object
             // @see base-ui
             return this.setDataResult(results);
+        },
+        /**
+         * A base list is considered empty if the array-to-set is empty (no elements)
+         * @param  {array}   data data to evaluate
+         * @return {Boolean} emptiness state
+         */
+        isEmptyData : function (data) {
+            return (data.length === 0);
         },
         /**
          * Adds a child for every member in data
@@ -772,7 +815,8 @@ define( [
             CHILD_REMOVED : 'childRemoved',
             CLEARED : 'cleared',
             MAX_CHILDREN_REACHED : 'maxChildrenReached',
-            SET_DATA_END : 'setDataEnd'
+            SET_DATA_END : 'setDataEnd',
+            BEFORE_ADD_CHILD : 'beforeAddChild'
         }
     });
 

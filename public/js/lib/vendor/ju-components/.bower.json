@@ -21,14 +21,13 @@
   ],
   "private": true,
   "homepage": "https://github.com/hulilabs/ju-components",
-  "_release": "823c4f6585",
+  "_release": "0d5c68c2e8",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "823c4f6585ee35c6237c26eaf4270b2a86879d77"
+    "commit": "0d5c68c2e8688b319c1570a613115e04bae58491"
   },
   "_source": "https://github.com/hulilabs/ju-components.git",
   "_target": "*",
-  "_originalSource": "https://github.com/hulilabs/ju-components.git",
-  "_direct": true
+  "_originalSource": "https://github.com/hulilabs/ju-components.git"
 }
