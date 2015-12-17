@@ -70,14 +70,36 @@ define( [
 
             this.addResources(RESOURCE_MAP);
 
+            // selector of the box component
+            // with its id
+            this.S = {
+                box : '.box' + this.opts.num
+            }
+
             this.childrenDef = CHILDREN_DEFINITION;
+        },
+
+        // set the color white to the box component
+        // if it is selected by the user
+        setClearColor : function () {
+            this.t.$box.css('background-color','white');
+        },
+
+        // set the color of the parameter to the box component
+        // to return it to the original color
+        setSelectedColor : function (color) {
+            this.t.$box.css('background-color',color);
+        },
+
+        getColor : function () {
+            return this.t.$box.css('background-color');
         },
 
         /**
          * Commonly used to setup the component's markup
          */
         configureComponent : function() {
-            var instructionMarkup =  Mustache.render(boxView,this.opts);//'<div class="color-numbers-instruction">' + this.opts.customizableLabel + '</div>';
+            var instructionMarkup =  Mustache.render(boxView,this.opts);
             this.appendToView(instructionMarkup,false);
         }
 

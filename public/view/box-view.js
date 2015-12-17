@@ -20,7 +20,7 @@ define( [
     'use strict';
 
     return [
-        '<button class="box" style="background-color : {{color}}">{{num}}</button>',
+        '<button class="box{{num}}" style="background-color : {{color}}; width : 22%; margin : 2px">{{num}}</button>',
     ].join('');
 
 
