@@ -24,7 +24,7 @@ define( [
 
     var RESOURCE_MAP = {
         template : [
-            //'view/colorboxes/colorboxes',
+            //'view/colorboxes/colorbox',
         ],
         cssFile : [
             // 'path/to/css/file'
@@ -40,40 +40,47 @@ define( [
 
     var ColorboxComponent = BaseComponent.extend({
    
-        init : function (opts) {            
+        init : function () {            
             this._super.apply(this, arguments);
 
-            this.addResources(RESOURCE_MAP);
+            //this.addResources(RESOURCE_MAP);
 
-            this.childrenDef = CHILDREN_DEFINITION;
+            //this.childrenDef = CHILDREN_DEFINITION;
+
+            // Store uppercase box's color for future reference (used as key for COLORS_HEXA)
+            this.upperCaseColor = this.opts.color.toUpperCase();
 
             this.S = {
-                color: this.opts.color
+                colorbox : '#' + this.opts.color + this.opts.id
+            };
+
+            this.COLORS_HEXA = {
+                RED : '#ef0000',
+                GREEN : '#00ef00',
+                BLUE : '#0000ef',
+                YELLOW : '#ffff00',
+                WHITE : '#ffffff'
             };
             
         },
 
         configureComponent : function() {
-            var colorboxTemplate = {
-                'color' : this.opts.color
-            };
-            var colorBoxRendered = Mustache.render(colorboxView, colorboxTemplate);
+            // Mustache's template
+            var colorboxTemplate = { 'colorboxId' : this.opts.color + this.opts.id },
+                colorBoxRendered = Mustache.render(colorboxView, colorboxTemplate);
 
+            // Use false as second parameter to not combine child's class with parent's class 
             this.appendToView(colorBoxRendered, false);
         },
 
-        turnOn : function(color) {                    
-            (this.t['$' + color]).css('background-color', this.COLORS_HEXA[color]);
+        turnOn : function() {
+            this.t.$colorbox.css('background-color', this.COLORS_HEXA[this.upperCaseColor]);
+        },
+
+        turnOff : function() {
+            this.t.$colorbox.css('background-color', this.COLORS_HEXA.WHITE);
         }
 
-    });
-
-    ColorboxComponent.classMembers({
-        COLORS : {
-            RED: 'red',
-            GREEN: 'green',
-            BLUE: 'blue'
-        }
     });
 
     return ColorboxComponent;

@@ -19,11 +19,13 @@
  */
 define([
             'ju-mvc/controller',
-            'ju-example/modules/colorboxes-component/colorboxes-interaction-component'
+            'ju-example/modules/colorboxes-component/colorboxes-interaction-component',
+            'view/colorboxes/colorboxes-controller'
         ],
         function (
             Controller,
-            ColorboxesInteractComp
+            ColorboxesInteractComp,
+            colorboxesControllerView
         ) {
 
     'use strict';
@@ -34,7 +36,7 @@ define([
      * The only requirement is to set the member `this.landCompClass`
      * with a component definition (i.e. a class that extends component/base)
      */
-    var ControllerWithComponent = Controller.extend({
+    var ColorboxesController = Controller.extend({
 
         /*
         init : function() {
@@ -51,25 +53,22 @@ define([
             this.load.apply(this, urlParams);
         },
 
-        setComponentClass : function (ComponentClass) {
-            this.ComponentClass = ComponentClass;
-        },
-
         load : function () {
-            var $content = $("<div class='component-content'>Colorboxes!</div>");
+            var $content = $(colorboxesControllerView);
             this.setContent($content);
 
-            var ComponentClass = this.ComponentClass || ColorboxesInteractComp;
+            // Number of boxes to display for each color
+            var boxesByColor = 3;
 
-            this.ColorboxesInteractComp = new ComponentClass();
+            this.colorboxInteractInst = new ColorboxesInteractComp(boxesByColor);
             
-            this.ColorboxesInteractComp.isRootComponent = true;
+            this.colorboxInteractInst.isRootComponent = true;
 
-            this.ColorboxesInteractComp.load.apply(this.ColorboxesInteractComp, $.merge([$content], arguments));
+            this.colorboxInteractInst.load.apply(this.colorboxInteractInst, $.merge([$content], arguments));
         }
 
     });
 
-    return ControllerWithComponent;
+    return ColorboxesController;
 
 });

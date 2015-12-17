@@ -18,8 +18,8 @@ define( [
     'use strict';
 
     return [
-        '<div>',
-        	'<button class="turn-on-btn">Turn On</button>',
+        '<div> <br>',
+        	'<button class="turn-on-btn" style="cursor:pointer;">Turn On</button>',
         	'<div class="colorboxes"></div>',
         '</div>'
     ].join('');

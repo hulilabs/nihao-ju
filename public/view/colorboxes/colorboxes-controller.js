@@ -18,8 +18,10 @@ define( [
     'use strict';
 
     return [
-        '<div style="height:50px;width:50px;margin:5px;border:solid 1px;display:inline-block"',
-        ' id="{{colorboxId}}">',
+        '<div class="component-content">',
+        	'<h2>Color boxes!</h2>',
+        	'<p>A "colorbox interaction" component with "colorbox" components as children</p>',
+        	'<p>Click on the button to turn on and off random color boxes</p>',
         '</div>'
     ].join('');
 
