@@ -19,19 +19,22 @@
 define( [
             'ju-components/base',
             'lib/vendor/mustache.js/mustache',
-            'view/color-numbers-view'
+            'ju-components/resource/storage/template-storage'
         ],
         function (
             BaseComponent,
             Mustache,
-            colorNumbersView
+            TemplateStorage
         ) {
 
     'use strict';
 
+    var TEMPLATE_PATH = 'color-numbers-view';
+
     var RESOURCE_MAP = {
         template : [
-            // 'path/to/template'
+            // 'path/to/template'  
+            TEMPLATE_PATH 
         ],
         cssFile : [
             // 'path/to/css/file'
@@ -63,7 +66,8 @@ define( [
         init : function () {
             this.setOptions({
                 // set any default options values here
-                customizableLabel : 'Insert a number and press the ON button!'
+                customizableLabel : 'Insert a number and press the ON button!',
+                numberOfBoxes : 16
             });
 
             this._super.apply(this, arguments);
@@ -78,9 +82,9 @@ define( [
             this.childrenDef = CHILDREN_DEFINITION;
         },
 
-        //init of the children components
+        // check init() to change the number of boxes to generate
         initChildrenDef : function () {
-            this._generateBoxes(40);
+            this._generateBoxes(this.opts.numberOfBoxes);
         },
 
         bindEvents : function () {
@@ -120,20 +124,19 @@ define( [
 
         _changeBoxColor : function (box) {
             if(this.clearedBox){
-                this.clearedBox.setSelectedColor(this.oldColor);
+                this.clearedBox.toggleColor();
             }
-            // used to store the original color of the box
-            this.oldColor = box.getColor();
             // used to store the box 
             // that is selected
             this.clearedBox = box;
-            box.setClearColor();
+            box.toggleColor();
         },
 
         /**
          * Commonly used to setup the component's markup
          */
         configureComponent : function() {
+            var colorNumbersView = TemplateStorage.getInst().get(TEMPLATE_PATH);
             var instructionMarkup =  Mustache.render(colorNumbersView,this.opts);//'<div class="color-numbers-instruction">' + this.opts.customizableLabel + '</div><div class="box"></div>';
             this.appendToView(instructionMarkup);
         }

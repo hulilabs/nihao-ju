@@ -19,19 +19,25 @@
 define( [
             'ju-components/base',
             'lib/vendor/mustache.js/mustache',
-            'view/box-view'
+            'ju-components/resource/storage/template-storage'
         ],
         function (
             BaseComponent,
             Mustache,
-            boxView
+            TemplateStorage
         ) {
 
     'use strict';
 
+    //cambiar archivos .js del view por html
+    //Class.getInst(). hasta acá tengo una instancia -> es un singleton
+
+    var TEMPLATE_PATH = 'box-view';
+
     var RESOURCE_MAP = {
         template : [
             // 'path/to/template'
+            TEMPLATE_PATH
         ],
         cssFile : [
             // 'path/to/css/file'
@@ -70,6 +76,8 @@ define( [
 
             this.addResources(RESOURCE_MAP);
 
+            this.status = 1;
+
             // selector of the box component
             // with its id
             this.S = {
@@ -79,26 +87,23 @@ define( [
             this.childrenDef = CHILDREN_DEFINITION;
         },
 
-        // set the color white to the box component
-        // if it is selected by the user
-        setClearColor : function () {
-            this.t.$box.css('background-color','white');
-        },
-
-        // set the color of the parameter to the box component
-        // to return it to the original color
-        setSelectedColor : function (color) {
-            this.t.$box.css('background-color',color);
-        },
-
-        getColor : function () {
-            return this.t.$box.css('background-color');
+        // change the color if is turned on or off
+        // change the status
+        toggleColor : function () {
+            if(!this.status){
+                this.t.$box.css('background-color',this.opts.color);
+                this.status = 1;
+            } else {
+                this.t.$box.css('background-color','white');
+                this.status = 0;
+            }
         },
 
         /**
          * Commonly used to setup the component's markup
          */
         configureComponent : function() {
+            var boxView = TemplateStorage.getInst().get(TEMPLATE_PATH);
             var instructionMarkup =  Mustache.render(boxView,this.opts);
             this.appendToView(instructionMarkup,false);
         }
