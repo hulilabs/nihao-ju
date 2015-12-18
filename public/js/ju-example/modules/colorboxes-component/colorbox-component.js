@@ -11,20 +11,22 @@
 
 define( [
             'ju-components/base',
-            'view/colorboxes/colorbox',
-            'lib/vendor/mustache.js/mustache'
+            'lib/vendor/mustache.js/mustache',
+            'ju-components/resource/storage/template-storage'
         ],
         function (
             BaseComponent,
-            colorboxView,
-            Mustache
+            Mustache,
+            TemplateStorage
         ) {
 
     'use strict';
 
+    var TEMPLATE_PATH = 'colorboxes/colorbox';
+
     var RESOURCE_MAP = {
         template : [
-            //'view/colorboxes/colorbox',
+            TEMPLATE_PATH
         ],
         cssFile : [
             // 'path/to/css/file'
@@ -43,7 +45,7 @@ define( [
         init : function () {            
             this._super.apply(this, arguments);
 
-            //this.addResources(RESOURCE_MAP);
+            this.addResources(RESOURCE_MAP);
 
             //this.childrenDef = CHILDREN_DEFINITION;
 
@@ -65,7 +67,9 @@ define( [
         },
 
         configureComponent : function() {
-            // Mustache's template
+
+            var colorboxView = TemplateStorage.getInst().get(TEMPLATE_PATH);
+            // Mustache's template for setting the id of colorbox in markup
             var colorboxTemplate = { 'colorboxId' : this.opts.color + this.opts.id },
                 colorBoxRendered = Mustache.render(colorboxView, colorboxTemplate);
 

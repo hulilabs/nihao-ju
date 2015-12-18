@@ -11,18 +11,21 @@
 
 define( [
             'ju-components/base',
-            'view/colorboxes/colorboxes-interaction'
+            'ju-components/resource/storage/template-storage'
         ],
         function (
             BaseComponent,
-            colorboxesInteractionView
+            TemplateStorage
         ) {
 
     'use strict';
 
+    var TEMPLATE_PATH = 'colorboxes/colorboxes-interaction',
+        INSERTION_POINT = '.colorboxes';
+
     var RESOURCE_MAP = {
         template : [
-            //'view/colorboxes/colorboxes-interaction',
+            TEMPLATE_PATH
         ],
         cssFile : [
             // 'path/to/css/file'
@@ -46,6 +49,7 @@ define( [
 
     // Path to colorbox component
     var COLORBOX_COMPONENT = 'ju-example/modules/colorboxes-component/colorbox-component';
+
 
     var ColorboxesInteractionComponent = BaseComponent.extend({
    
@@ -79,8 +83,9 @@ define( [
             this._generateColorBoxes();
         },
 
-        configureComponent : function() {                 
-            this.appendToView(colorboxesInteractionView);
+        configureComponent : function() {            
+            var controllerView = TemplateStorage.getInst().get(TEMPLATE_PATH);            
+            this.appendToView(controllerView);
         },
 
         bindEvents : function() {
@@ -95,7 +100,7 @@ define( [
                     var color = ColorboxesInteractionComponent.COLORS[colorKey];
 
                     // Add to CHILDREN_DEFINITION a new definition of child colorbox component
-                    CHILDREN_DEFINITION[color + i] = this._createColorBox('.colorboxes', i, color);
+                    CHILDREN_DEFINITION[color + i] = this._createColorBox(INSERTION_POINT, i, color);
                 }
             }            
         },

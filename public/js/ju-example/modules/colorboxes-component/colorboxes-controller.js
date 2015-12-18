@@ -58,7 +58,7 @@ define([
             this.setContent($content);
 
             // Number of boxes to display for each color
-            var boxesByColor = 3;
+            var boxesByColor = 5;
 
             this.colorboxInteractInst = new ColorboxesInteractComp(boxesByColor);
             
