@@ -39,6 +39,18 @@ define( [
         'colorboxes' : {
             route: 'colorboxes',
             controller: 'ju-example/modules/colorboxes-component/colorboxes-controller'
+        },
+
+        'progress-bar' : {
+            route : 'progress-bar',
+            defaultRoute : 'progress-bar',
+            controller : 'js/ju-example/modules/progress-bar/progress-bar-ctrl'
+        },
+
+        'color-numbers' : {
+            route : 'color-numbers',
+            defaultRoute : 'color-numbers',
+            controller : 'js/ju-example/modules/color-numbers/color-numbers-controller'
         }
     };
 
