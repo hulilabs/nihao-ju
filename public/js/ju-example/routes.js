@@ -34,6 +34,11 @@ define( [
         'loading-bar' : {
             route: 'loading-bar',
             controller: 'ju-example/modules/loading-bar/loading-bar'
+        },
+
+        'colorboxes' : {
+            route: 'colorboxes',
+            controller: 'ju-example/modules/colorboxes-component/colorboxes-controller'
         }
     };
 
